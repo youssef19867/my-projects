@@ -1,0 +1,953 @@
+/**/#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+class Product
+{
+public:
+	int pid;
+	string pname;
+	int stock;
+	int price;
+	int exp_month;
+	int exp_year;
+	Product* pnext;
+};
+class clistProduct
+{
+public:
+	Product* phead;
+	Product* ptail;
+	clistProduct() {
+		phead = NULL;
+		ptail = NULL;
+	}
+
+	void attach(Product* pnn) {
+		if (phead == NULL) {
+			phead = pnn;
+			ptail = pnn;
+		}
+		else {
+			ptail->pnext = pnn;
+			ptail = pnn;
+		}
+	}
+
+	void Display()
+	{
+		Product* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			cout << ptrap->pid << ",";
+			cout << ptrap->pname << ",";
+			cout << ptrap->stock << ",";
+			cout << ptrap->price << ",";
+			cout << ptrap->exp_month << ",";
+			cout << ptrap->exp_year << endl;
+			ptrap = ptrap->pnext;
+		}
+	}
+
+	~clistProduct() {
+		Product* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			phead = ptrap->pnext;
+			ptrap->pnext = NULL;
+			delete[] ptrap;
+			ptrap = phead;
+		}
+	}
+};
+
+class Customer
+{
+public:
+	int cid;
+	string cname;
+	string cpass;
+	Customer* pnext;
+};
+class clistCustomer
+{
+public:
+	Customer* phead;
+	Customer* ptail;
+	clistCustomer() {
+		phead = NULL;
+		ptail = NULL;
+	}
+
+	void attach(Customer* pnn) {
+		if (phead == NULL) {
+			phead = pnn;
+			ptail = pnn;
+		}
+		else {
+			ptail->pnext = pnn;
+			ptail = pnn;
+		}
+	}
+
+	void Display()
+	{
+		Customer* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			cout << ptrap->cid << ",";
+			cout << ptrap->cname << ",";
+			cout << ptrap->cpass << endl;
+			ptrap = ptrap->pnext;
+		}
+	}
+
+	~clistCustomer() {
+		Customer* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			phead = ptrap->pnext;
+			ptrap->pnext = NULL;
+			delete[] ptrap;
+			ptrap = phead;
+		}
+	}
+
+};
+
+class Orders
+{
+public:
+	int pid;
+	int cid;
+	int qty;
+	int pur;
+	Orders* pnext;
+};
+class clistOrders
+{
+public:
+	Orders* phead;
+	Orders* ptail;
+	clistOrders() {
+		phead = NULL;
+		ptail = NULL;
+	}
+
+	void attach(Orders* pnn) {
+		if (phead == NULL) {
+			phead = pnn;
+			ptail = pnn;
+		}
+		else {
+			ptail->pnext = pnn;
+			ptail = pnn;
+		}
+	}
+
+	void Display()
+	{
+		Orders* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			cout << ptrap->pid << ",";
+			cout << ptrap->cid << ",";
+			cout << ptrap->qty << ",";
+			cout << ptrap->pur << endl;
+			ptrap = ptrap->pnext;
+		}
+	}
+
+	~clistOrders() {
+		Orders* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			phead = ptrap->pnext;
+			ptrap->pnext = NULL;
+			delete[] ptrap;
+			ptrap = phead;
+		}
+	}
+
+};
+
+class Admin
+{
+public:
+	int aid;
+	string aname;
+	string apass;
+	Admin* pnext;
+};
+class clistAdmin
+{
+public:
+	Admin* phead;
+	Admin* ptail; 
+	clistAdmin() {
+		phead = NULL;
+		ptail = NULL;
+	}
+
+	void attach(Admin* pnn) {
+		if (phead == NULL) {
+			phead = pnn;
+			ptail = pnn;
+		}
+		else {
+			ptail->pnext = pnn;
+			ptail = pnn;
+		}
+	}
+
+	void Display()
+	{
+		Admin* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			cout << ptrap->aid << ",";
+			cout << ptrap->aname << ",";
+			cout << ptrap->apass << endl;
+			ptrap = ptrap->pnext;
+		}
+	}
+
+	~clistAdmin() {
+		Admin* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			phead = ptrap->pnext;
+			ptrap->pnext = NULL;
+			delete[] ptrap;
+			ptrap = phead;
+		}
+	}
+
+};
+clistProduct plist;
+clistCustomer clist;
+clistAdmin alist;
+clistOrders olist;
+int Logged = 0;
+
+void Checkout(int uid, int& tot, int& purchase)
+{
+	system("cls");
+	int choice;
+	cout << "Cart: " << endl;
+	Orders* temp = olist.phead, * pb = NULL;
+	while (temp != NULL)
+	{
+		if (temp->cid == uid && temp->pur == 0)
+		{
+			cout << "Item: " << temp->pid << ", Quantity: " << temp->qty << endl << endl;
+		}
+		temp = temp->pnext;
+	}
+	cout << endl << "Cost: " << tot << endl;
+	cout << "Taxes: 50" << endl;
+	cout << endl << "Total: " << tot + 50 << endl;
+	cout << "1: Confirm" << endl << "2: Return" << endl;
+	cin >> choice;
+	if (choice == 1)
+	{
+		purchase = 1;
+		tot = 0;
+		ofstream output;
+		output.open("Product.txt");
+		if (output.is_open())
+		{
+			output << "pid" << ",";
+			output << "pname" << ",";
+			output << "stock" << ",";
+			output << "price" << ",";
+			output << "emonth" << ",";
+			output << "eyear";
+			Product* trav = plist.phead;
+			while (trav != NULL)
+			{
+				output << endl << to_string(trav->pid) << ",";
+				output << trav->pname << ",";
+				output << to_string(trav->stock) << ",";
+				output << to_string(trav->price) << ",";
+				output << to_string(trav->exp_month) << ",";
+				output << to_string(trav->exp_year);
+				trav = trav->pnext;
+			}
+		}
+		output.close();
+		temp = olist.phead;
+		while (temp != NULL)
+		{
+			if (temp->cid == uid && temp->pur == 0)
+			{
+				temp->pur = 1;
+				ofstream output;
+				output.open("Orders.txt");
+				if (output.is_open())
+				{
+					output << "pid" << ",";
+					output << "cid" << ",";
+					output << "quantity" << ",";
+					output << "purchased";
+					Orders* trav = olist.phead;
+					while (trav != NULL)
+					{
+						output << endl << to_string(trav->pid) << ",";
+						output << to_string(trav->cid) << ",";
+						output << to_string(trav->qty) << ",";
+						output << to_string(trav->pur);
+						trav = trav->pnext;
+					}
+				}
+				output.close();
+			}
+			temp = temp->pnext;
+		}
+	}
+}
+void CustomerPage(string username, int uid, int& tot)
+{
+	system("cls");
+	cout << "Welcome, " << username << endl << endl;
+	Product* trav = plist.phead;
+	int choice, id, quan, purchase = 0;
+	while (trav != NULL)
+	{
+		if (trav->stock > 0)
+		{
+			cout << "ID: " << trav->pid << endl;
+			cout << "Name: " << trav->pname << endl;
+			cout << "Price: " << trav->price << endl;
+			if (trav->stock <= 5)
+			{
+				cout << "Only " << trav->stock <<" left in stock!" << endl;
+			}
+			cout << "Expiry Date: " << trav->exp_month << "/" << trav->exp_year << endl << endl;
+		}
+		trav = trav->pnext;
+	}
+	cout << "Cart: ";
+	Orders* temp = olist.phead, * pb = NULL;
+	while (temp != NULL)
+	{
+		if (temp->cid == uid && temp->pur == 0)
+		{
+			cout << temp->pid << ", " << temp->qty << "   ";
+		}
+		temp = temp->pnext;
+	}
+	cout << endl << "Total Cost: " << tot;
+	cout << endl << endl << "1: Buy" << endl << "2: Return" << endl << "3: Checkout" << endl << "4: Log Out" << endl;
+	cin >> choice;
+	if (choice == 1)
+	{
+		cout << "Enter ID: ";
+		cin >> id;
+		cout << "Enter Quantity: ";
+		cin >> quan;
+		trav = plist.phead;
+		while (trav != NULL)
+		{
+			if (trav->pid == id && trav->stock > 0)
+			{
+				trav->stock -= quan;
+				tot += trav->price * quan;
+				Orders* pnn = new Orders[1];
+				pnn->cid = uid;
+				pnn->pid = id;
+				pnn->qty = quan;
+				pnn->pur = 0;
+				pnn->pnext = NULL;
+				olist.attach(pnn);
+			}
+			trav = trav->pnext;
+		}
+		CustomerPage(username, uid, tot);
+	}
+	if (choice == 2)
+	{
+		cout << "Enter ID: ";
+		cin >> id;
+		cout << "Enter Quantity: ";
+		cin >> quan;
+		temp = olist.phead;
+		while (temp != NULL)
+		{
+			if (temp->cid == uid && temp->pid == id && temp->pur == 0)
+			{
+				temp->qty -= quan;
+				if (temp->qty <= 0)
+				{
+					if (pb == NULL)
+					{
+						olist.phead = temp->pnext;
+						temp->pnext = NULL;
+						delete temp;
+					}
+					else
+					{
+						pb->pnext = temp->pnext;
+						if (temp->pnext == NULL)
+						{
+							olist.ptail = pb;
+						}
+						temp->pnext = NULL;
+						delete temp;
+					}
+				}
+				trav = plist.phead;
+				while (trav != NULL)
+				{
+					if (trav->pid == id)
+					{
+						trav->stock += quan;
+						tot -= trav->price * quan;
+					}
+					trav = trav->pnext;
+				}
+				break;
+			}
+			pb = temp;
+			temp = temp->pnext;
+		}
+		CustomerPage(username, uid, tot);
+	}
+	if (choice == 3)
+	{
+		Checkout(uid, tot, purchase);
+		CustomerPage(username, uid, tot);
+	}
+	if (choice == 4)
+	{
+		return;
+	}
+}
+void CustomerLog()
+{
+	system("cls");
+	string name, pass, read;
+	int ct = 0, f = 0, id, tot = 0;
+	cout << "Enter Username: ";
+	cin >> name;
+	cout << "Enter Password: ";
+	cin >> pass;
+	Customer* trav = clist.phead;
+	while (trav != NULL)
+	{
+		if (trav->cname == name && trav->cpass == pass)
+		{
+			f = 1;
+			id = trav->cid;
+			break;
+		}
+		trav = trav->pnext;
+	}
+	if (f == 0)
+	{
+		Customer* pnn = new Customer[1];
+		pnn->cid = clist.ptail->cid + 1;
+		pnn->cname = name;
+		pnn->cpass = pass;
+		pnn->pnext = NULL;
+		clist.attach(pnn);
+		id = pnn->cid;
+		ofstream writefile;
+		writefile.open("Customer.txt", ios::app);
+		if (writefile.is_open())
+		{
+			writefile << endl << to_string(pnn->cid) << ",";
+			writefile << pnn->cname << ",";
+			writefile << pnn->cpass;
+		}
+		writefile.close();
+	}
+	CustomerPage(name, id, tot);
+}
+void adjustproduct()
+{
+	system("cls");
+	int emonth = 0, eyear = 0;
+	int newprice = 0;
+	string newn;
+	int newstock;
+	int id = 0;
+	cout << "the id of the product u want to adjust:" << endl;
+	cin >> id;
+	cout << "the new pname:" << endl;
+	cin >> newn;
+	cout << "the new stock:" << endl;
+	cin >> newstock;
+	cout << "the new price:" << endl;
+	cin >> newprice;
+	cout << "the new expiry month:" << endl;
+	cin >> emonth;
+	cout << "the new expiry year:" << endl;
+	cin >> eyear;
+	Product* ptrav = plist.phead;
+	while (ptrav != NULL)
+	{
+		if (ptrav->pid == id)
+		{
+			ptrav->pname = newn;
+			ptrav->exp_month = emonth;
+			ptrav->exp_year = eyear;
+			ptrav->price = newprice;
+			ptrav->stock = newstock;
+		}
+		ptrav = ptrav->pnext;
+	}
+	return;
+}
+void deleteproduct()
+{
+	system("cls");
+	int id = 0;
+	cout << "ID of the product you want to delete: " << endl;
+	cin >> id;
+	Product* ptrav = plist.phead;
+	Product* pb = plist.phead;
+	Product* pboi = NULL;
+	while (ptrav != NULL)
+	{
+		if (ptrav != plist.phead)
+		{
+			if (ptrav->pid == id)
+			{
+				pboi = ptrav->pnext;
+				while (pboi != NULL)
+				{
+					pboi->pid--;
+					pboi = pboi->pnext;
+				}
+				pb->pnext = ptrav->pnext;
+				ptrav->pnext = NULL;
+				break;
+			}
+		}
+		if (ptrav->pid == id && ptrav == plist.phead)
+		{
+			pboi = ptrav->pnext;
+			while (pboi != NULL)
+			{
+				pboi->pid--;
+				pboi = pboi->pnext;
+			}
+			pb = ptrav->pnext;
+			plist.phead = pb;
+			ptrav->pnext = NULL;
+			break;
+		}
+		pb = ptrav;
+		ptrav = ptrav->pnext;
+	}
+	return;
+}
+void addnewproduct()
+{
+	system("cls");
+	string newname;
+	int stock = 0;
+	int price = 0;
+	int emonth = 0;
+	int eyear = 0;
+	Product* pnn = new Product[1];
+	Product* ptravpro = plist.ptail;
+	pnn->pid = ptravpro->pid + 1;
+	cout << "enter the name of the new product: " << endl;
+	cin >> newname;
+	cout << "enter the stock of the new product: " << endl;
+	cin >> stock;
+	cout << "enter the price of the new product: " << endl;
+	cin >> price;
+	cout << "enter the expiry month of the new product: " << endl;
+	cin >> emonth;
+	cout << "enter the expiry year of the new product: " << endl;
+	cin >> eyear;
+	pnn->pname = newname;
+	pnn->price = price;
+	pnn->stock = stock;
+	pnn->exp_month = emonth;
+	pnn->exp_year = eyear;
+	pnn->pnext = NULL;
+	plist.attach(pnn);
+	return;
+}
+void dispproductis()
+{
+	system("cls");
+	Product* ptravpro = plist.phead;
+	int sstock = 0;
+	cout << "the stock of the items whhose stock is lower than the specified stock u want to display: " << endl;
+	cin >> sstock;
+	while (ptravpro != NULL)
+	{
+		if (ptravpro->stock < sstock)
+		{
+			cout << "ID: " << ptravpro->pid << endl;
+			cout << "Name: " << ptravpro->pname << endl;
+			cout << "Price: " << ptravpro->price << endl;
+			cout << "Stock: " << ptravpro->stock << endl;
+			cout << "Expiry Date: " << ptravpro->exp_month << "/" << ptravpro->exp_year << endl << endl;
+		}
+		ptravpro = ptravpro->pnext;
+	}
+	cout << "press anything to return" << endl;
+	string so;
+	cin >> so;
+	if (so[0] == '1')
+	{
+		return;
+	}
+	else
+	{
+		return;
+	}
+}
+void disphowmanyorders()
+{
+	int ct = 0;
+	int cid = 0;
+	cout << "enter the desired customer ID: " << endl;
+	cin >> cid;
+	Orders* ptrav = olist.phead;
+	while (ptrav != NULL)
+	{
+		if (ptrav->cid == cid)
+		{
+			ct++;
+		}
+		ptrav = ptrav->pnext;
+	}
+	cout << "the amounts of orders made by customer: " << cid << " is: " << ct << endl;
+	cout << "press anything to return" << endl;
+	string so;
+	cin >> so;
+	if (so[0] == '1')
+	{
+		return;
+	}
+	else
+	{
+		return;
+	}
+}
+void adminhome()
+{
+	system("cls");
+	Product* ptravpro = plist.phead;
+	int choice = 0;
+	cout << "chose 1 to display all products" << endl;
+	cout << "chose 2 to adjust any products" << endl;
+	cout << "chose 3 to delete any products" << endl;
+	cout << "chose 4 to add new products" << endl;
+	cout << "chose 5 to display all product with a specified input" << endl;
+	cout << "chose 6 to how many orders were made by a specific customer" << endl;
+	cout << "chose 7 to log out" << endl;
+	cin >> choice;
+	if (choice == 1)
+	{
+		while (ptravpro != NULL)
+		{
+			cout << "ID: " << ptravpro->pid << endl;
+			cout << "Name: " << ptravpro->pname << endl;
+			cout << "Price: " << ptravpro->price << endl;
+			cout << "Stock: " << ptravpro->stock << endl;
+			cout << "Expiry Date: " << ptravpro->exp_month << "/" << ptravpro->exp_year << endl << endl;
+			ptravpro = ptravpro->pnext;
+		}
+		cout << "press anything to return" << endl;
+		string so;
+		cin >> so;
+		if (so[0] == '1')
+		{
+			adminhome();
+		}
+		else
+		{
+			adminhome();
+		}
+	}
+	if (choice == 2)
+	{
+		adjustproduct();
+		adminhome();
+	}
+	if (choice == 3)
+	{
+		deleteproduct();
+		adminhome();
+	}
+	if (choice == 4)
+	{
+		addnewproduct();
+		adminhome();
+	}
+	if (choice == 5)
+	{
+		dispproductis();
+		adminhome();
+	}
+	if (choice == 6)
+	{
+		disphowmanyorders();
+		adminhome();
+	}
+	if (choice == 7)
+	{
+		ofstream writefile;
+		//writefile.open("file.txt",ios::app);
+		writefile.open("Product.txt");
+		//check if the file is open 
+		if (writefile.is_open())
+		{
+			writefile << "pid" << ",";
+			writefile << "pname" << ",";
+			writefile << "stock" << ",";
+			writefile << "price" << ",";
+			writefile << "emonth" << ",";
+			writefile << "eyear";
+			Product* trav = plist.phead;
+			while (trav != NULL)
+			{
+				writefile << endl << to_string(trav->pid) << ",";
+				writefile << trav->pname << ",";
+				writefile << to_string(trav->stock) << ",";
+				writefile << to_string(trav->price) << ",";
+				writefile << to_string(trav->exp_month) << ",";
+				writefile << to_string(trav->exp_year);
+				trav = trav->pnext;
+			}
+		}
+		writefile.close();
+		return;
+	}
+}
+void AdminLog()
+{
+	system("cls");
+	string name, pass, read;
+	int ct = 0;
+	cout << "Enter Username: ";
+	cin >> name;
+	cout << "Enter Password: ";
+	cin >> pass;
+	Admin* ptrav = alist.phead;
+	int ctbad = 0;
+	while (ptrav != NULL)
+	{
+
+		if (ptrav->aname != name || ptrav->apass != pass)
+		{
+			ctbad = 1;
+		}
+		else
+		{
+			if (ptrav->aname == name && ptrav->apass == pass)
+			{
+				ctbad = 0;
+				break;
+			}
+		}
+		ptrav = ptrav->pnext;
+	}
+	if (ctbad == 0)
+	{
+		adminhome();
+		return;
+	}
+	else
+	{
+		cout << "invalid login: try again" << endl;
+		AdminLog();
+	}
+}
+void GuestPage()
+{
+	system("cls");
+	cout << "Are you a Customer: 1 or an Admin: 2" << endl;
+	int choice;
+	cin >> choice;
+	if (choice == 1)
+		CustomerLog();
+	else
+		AdminLog();
+}
+void main()
+{
+	string name, pass, read;
+	ifstream product, customer, admin, orders;
+	product.open("Product.txt");
+	if (product.is_open())
+	{
+		string temp = "";
+		string info[6];
+		int k = 0;
+		int ct = 0;
+		while (getline(product, read))
+		{
+			if (ct > 0)
+			{
+				for (int i = 0; i < read.length(); i++)
+				{
+					if (read[i] == ',')
+					{
+						temp.clear();
+						k++;
+					}
+					else
+					{
+						temp += read[i];
+						info[k] += read[i];
+					}
+
+				}
+				k = 0;
+				Product* pnn = new Product[1];
+				pnn->pid = stoi(info[0]);
+				pnn->pname = info[1];
+				pnn->stock = stoi(info[2]);
+				pnn->price = stoi(info[3]);
+				pnn->exp_month = stoi(info[4]);
+				pnn->exp_year = stoi(info[5]);
+				pnn->pnext = NULL;
+				plist.attach(pnn);
+				for (int k = 0; k < 6; k++)
+				{
+					info[k].clear();
+				}
+			}
+			ct++;
+		}
+	}
+	product.close();
+	customer.open("Customer.txt");
+	if (customer.is_open())
+	{
+		string temp = "";
+		string info[3];
+		int k = 0;
+		int ct = 0;
+		while (getline(customer, read))
+		{
+			if (ct > 0)
+			{
+				for (int i = 0; i < read.length(); i++)
+				{
+					if (read[i] == ',')
+					{
+						temp.clear();
+						k++;
+					}
+					else
+					{
+						temp += read[i];
+						info[k] += read[i];
+					}
+
+				}
+				k = 0;
+				Customer* pnn = new Customer[1];
+				pnn->cid = stoi(info[0]);
+				pnn->cname = info[1];
+				pnn->cpass = info[2];
+				pnn->pnext = NULL;
+				clist.attach(pnn);
+				for (int k = 0; k < 3; k++)
+				{
+					info[k].clear();
+				}
+			}
+			ct++;
+		}
+	}
+	customer.close();
+	admin.open("Admin.txt");
+	if (admin.is_open())
+	{
+		string temp = "";
+		string info[3];
+		int k = 0;
+		int ct = 0;
+		while (getline(admin, read))
+		{
+			if (ct > 0)
+			{
+				for (int i = 0; i < read.length(); i++)
+				{
+					if (read[i] == ',')
+					{
+						temp.clear();
+						k++;
+					}
+					else
+					{
+						temp += read[i];
+						info[k] += read[i];
+					}
+
+				}
+				k = 0;
+				Admin* pnn = new Admin[1];
+				pnn->aid = stoi(info[0]);
+				pnn->aname = info[1];
+				pnn->apass = info[2];
+				pnn->pnext = NULL;
+				alist.attach(pnn);
+				for (int k = 0; k < 3; k++)
+				{
+					info[k].clear();
+				}
+			}
+			ct++;
+		}
+	}
+	admin.close();
+	orders.open("Orders.txt");
+	if (orders.is_open())
+	{
+		string temp = "";
+		string info[4];
+		int k = 0;
+		int ct = 0;
+		while (getline(orders, read))
+		{
+			if (ct > 0)
+			{
+				for (int i = 0; i < read.length(); i++)
+				{
+					if (read[i] == ',')
+					{
+						temp.clear();
+						k++;
+					}
+					else
+					{
+						temp += read[i];
+						info[k] += read[i];
+					}
+
+				}
+				k = 0;
+				Orders* pnn = new Orders[1];
+				pnn->pid = stoi(info[0]);
+				pnn->cid = stoi(info[1]);
+				pnn->qty = stoi(info[2]);
+				pnn->pur = stoi(info[3]);
+				pnn->pnext = NULL;
+				olist.attach(pnn);
+				for (int k = 0; k < 4; k++)
+				{
+					info[k].clear();
+				}
+			}
+			ct++;
+		}
+	}
+	orders.close();
+	for (;;)
+	{
+		GuestPage();
+	}
+}
