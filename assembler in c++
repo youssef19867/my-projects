@@ -1,0 +1,461 @@
+#include<iostream>
+#include<string>
+using namespace std;
+struct index
+{
+    string codename;
+    string code;
+};
+
+string hexatobin(string asem)//converts from hexa to binary and returns string containing binary
+{
+	string bin;
+	for (int i = 0; i < asem.length(); i++)
+	{
+		if (asem[i] == '*')
+		{
+			bin += "*";
+		}
+		if (asem[i] == '0')
+		{
+			bin += "0000";
+			bin += " ";
+		}
+		if (asem[i] == '1')
+		{
+			bin += "0001";
+			bin += " ";
+		}
+		if (asem[i] == '2')
+		{
+			bin += "0010";
+			bin += " ";
+		}
+		if (asem[i] == '3')
+		{
+			bin += "0011";
+			bin += " ";
+		}
+		if (asem[i] == '4')
+		{
+			bin += "0100";
+			bin += " ";
+		}
+		if (asem[i] == '5')
+		{
+			bin += "0101";
+			bin += " ";
+		}
+		if (asem[i] == '6')
+		{
+			bin += "0110";
+			bin += " ";
+		}
+		if (asem[i] == '7')
+		{
+			bin += "0111";
+			bin += " ";
+		}
+		if (asem[i] == '8')
+		{
+			bin += "1000";
+			bin += " ";
+		}
+		if (asem[i] == '9')
+		{
+			bin += "1001";
+			bin += " ";
+		}
+		if (asem[i] == 'A' || asem[i] == 'a')
+		{
+			bin += "1010";
+			bin += " ";
+		}
+		if (asem[i] == 'B' || asem[i] == 'b')
+		{
+			bin += "1011";
+			bin += " ";
+		}
+		if (asem[i] == 'C' || asem[i] == 'c')
+		{
+			bin += "1100";
+			bin += " ";
+		}
+		if (asem[i] == 'D' || asem[i] == 'd')
+		{
+			bin += "1101";
+			bin += " ";
+		}
+		if (asem[i] == 'E' || asem[i] == 'e')
+		{
+			bin += "1110";
+			bin += " ";
+		}
+		if (asem[i] == 'F' || asem[i] == 'f')
+		{
+			bin += "1111";
+			bin += " ";
+		}
+		if (asem[i] == ' ')
+		{
+			bin += " ";
+		}
+
+	}
+	return bin;
+}
+string assemblytohexa()
+{
+	///THIS FUNCTION TAKES THE NUMBER OF INSTRUCTIONS NOFIN AND CREATES A POINTER THAT POINTS TO A BUNCH OF STRINGS THAT ARE IN TOTAL THAT NUMBER. THEN WITH EACH INSTRUCTION IT ADDS * TO SIGNIFY AN ENDLINE SO THAT CODE COMES OUT VERTICALLY
+	int nofin = 0;
+	string hexa;
+
+	cout << "enter number of instructions:" << endl;
+	cin >> nofin;
+	string* x;
+	x = new string[nofin];
+	for (int i = 0; i < nofin; i++)
+	{
+		cout << "enter instruction num:" << endl;
+		cin >> x[i];
+	}
+	for (int i = 0; i < nofin; i++)
+	{
+		for (int k = 0; k < x[i].length(); k++)
+		{
+			if (x[i][k] == 'A' && x[i][k + 1] == 'N' && x[i][k + 2] == 'D')
+			{
+				hexa += "0";
+				hexa += x[i][k + 3];
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'A' && x[i][k + 2] == 'N'&&x[i][k+3]=='D')
+			{
+				hexa += "8";
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += x[i][k + 6];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'A' && x[i][k + 1] == 'D' && x[i][k + 2] == 'D')
+			{
+				hexa += "1";
+				hexa += x[i][k + 3];
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'A' && x[i][k + 2] == 'D'&&x[i][k+3]=='D')
+			{
+				hexa += "9";
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += x[i][k + 6];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'L' && x[i][k + 1] == 'D' && x[i][k + 2] == 'A')
+			{
+				hexa += "2";
+				hexa += x[i][k + 3];
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'L' && x[i][k + 2] == 'D'&&x[i][k+3]=='A')
+			{
+				hexa += "A";
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += x[i][k + 6];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'S' && x[i][k + 1] == 'T' && x[i][k + 2] == 'A')
+			{
+				hexa += "3";
+				hexa += x[i][k + 3];
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'S' && x[i][k + 2] == 'T'&&x[i][k+3]=='A')
+			{
+				hexa += "B";
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += x[i][k + 6];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'B' && x[i][k + 1] == 'U' && x[i][k + 2] == 'N')
+			{
+				hexa += "4";
+				hexa += x[i][k + 3];
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'B' && x[i][k + 2] == 'U'&&x[i][k+3]=='N')
+			{
+				hexa += "C";
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += x[i][k + 6];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'B' && x[i][k + 1] == 'S' && x[i][k + 2] == 'A')
+			{
+				hexa += "5";
+				hexa += x[i][k + 3];
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'B' && x[i][k + 2] == 'S'&&x[i][k+3]=='A')
+			{
+				hexa += "D";
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += x[i][k + 6];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'S' && x[i][k + 2] == 'Z')
+			{
+				hexa += "6";
+				hexa += x[i][k + 3];
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'I' && x[i][k + 2] == 'S'&&x[i][k]=='Z')
+			{
+				hexa += "E";
+				hexa += x[i][k + 4];
+				hexa += x[i][k + 5];
+				hexa += x[i][k + 6];
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'C' && x[i][k + 1] == 'L' && x[i][k + 2] == 'A')
+			{
+				hexa += "7";
+				hexa += "8";
+				hexa += "0";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'C' && x[i][k + 1] == 'L' && x[i][k + 2] == 'E')
+			{
+				hexa += "7";
+				hexa += "4";
+				hexa += "0";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'C' && x[i][k + 1] == 'M' && x[i][k + 2] == 'A')
+			{
+				hexa += "7";
+				hexa += "2";
+				hexa += "0";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'C' && x[i][k + 1] == 'M' && x[i][k + 2] == 'E')
+			{
+				hexa += "7";
+				hexa += "1";
+				hexa += "0";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'C' && x[i][k + 1] == 'I' && x[i][k + 2] == 'R')
+			{
+				hexa += "7";
+				hexa += "0";
+				hexa += "8";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'C' && x[i][k + 1] == 'I' && x[i][k + 2] == 'L')
+			{
+				hexa += "7";
+				hexa += "0";
+				hexa += "4";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'N' && x[i][k + 2] == 'C')
+			{
+				hexa += "7";
+				hexa += "0";
+				hexa += "2";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'S' && x[i][k + 1] == 'P' && x[i][k + 2] == 'A')
+			{
+				hexa += "7";
+				hexa += "0";
+				hexa += "1";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'S' && x[i][k + 1] == 'N' && x[i][k + 2] == 'A')
+			{
+				hexa += "7";
+				hexa += "0";
+				hexa += "0";
+				hexa += "8";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'S' && x[i][k + 1] == 'Z' && x[i][k + 2] == 'A')
+			{
+				hexa += "7";
+				hexa += "0";
+				hexa += "0";
+				hexa += "4";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'S' && x[i][k + 1] == 'Z' && x[i][k + 2] == 'E')
+			{
+				hexa += "7";
+				hexa += "0";
+				hexa += "0";
+				hexa += "2";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'H' && x[i][k + 1] == 'L' && x[i][k + 2] == 'T')
+			{
+				hexa += "7";
+				hexa += "0";
+				hexa += "0";
+				hexa += "1";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'N' && x[i][k + 2] == 'P')
+			{
+				hexa += "F";
+				hexa += "8";
+				hexa += "0";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'O' && x[i][k + 1] == 'U' && x[i][k + 2] == 'T')
+			{
+				hexa += "F";
+				hexa += "4";
+				hexa += "0";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'S' && x[i][k + 1] == 'K' && x[i][k + 2] == 'I')
+			{
+				hexa += "F";
+				hexa += "2";
+				hexa += "0";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'S' && x[i][k + 1] == 'K' && x[i][k + 2] == 'O')
+			{
+				hexa += "F";
+				hexa += "1";
+				hexa += "0";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'O' && x[i][k + 2] == 'N')
+			{
+				hexa += "F";
+				hexa += "0";
+				hexa += "8";
+				hexa += "O";
+				hexa += "*";
+				break;
+			}
+			if (x[i][k] == 'I' && x[i][k + 1] == 'O' && x[i][k + 2] == 'F')
+			{
+				hexa += "F";
+				hexa += "0";
+				hexa += "4";
+				hexa += "0";
+				hexa += "*";
+				break;
+			}
+			
+
+		}
+	}
+	return hexa;
+}
+
+int main()
+{
+	//index allcodes[25] = { "AND","X000","ADD","X001","LDA","X010","STA","X011","BUN","X100","BSA","X101","ISZ","X110","CLA","7800","CLE","7400","CMA","7200","CME","7100","CIR","7080","CIL","7040","INC","7020","SPA","7010","SNA","7008","SZA","7004","SZE","7002","HLT","7001","INP","F800","OUT","F400","SKI","F200","SKO","F100","ION","F080","IOF","F040" };
+	string hexa;
+	hexa = assemblytohexa();
+	cout << "your instructions are:"<<endl;
+	for (int i = 0; i < hexa.length(); i++)
+	{
+		if (hexa[i] == '*')
+		{
+			cout << endl;
+		}
+		else
+		{
+			cout << hexa[i];
+		}
+	}
+	cout << "for binary press 0:" << endl;
+	int som = 1;
+	cin >> som;
+	string binary;
+	if (som == 0)
+	{
+		binary = hexatobin(hexa);
+		for (int i = 0; i < binary.length(); i++)
+		{
+			
+			if (binary[i] == '*')
+			{
+				cout << endl;
+			}
+			else
+			{
+				cout << binary[i];
+			}
+				
+			
+		}
+	}
+	
+}
