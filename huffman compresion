@@ -1,0 +1,802 @@
+#include <iostream>
+#include<string>
+#include <fstream>  
+#include<conio.h>
+using namespace std;
+class ctnode {
+public:
+	char character = 0;
+	int ct = 0;
+	int id = 0;
+	ctnode* pright;
+	ctnode* pleft;
+	ctnode()
+	{
+		pright = NULL;
+		pleft = NULL;
+	}
+};
+class CBST {
+public:
+	ctnode* proot;
+	CBST()
+	{
+		proot = NULL;
+	}
+	void insert(ctnode* pnn)
+	{
+		if (proot == NULL)
+		{
+			proot = pnn;
+		}
+		else
+		{
+			ctnode* pb = NULL;
+			ctnode* ptrav = proot;
+			while (ptrav != NULL)
+			{
+				pb = ptrav;
+				if (pnn->ct > ptrav->ct)
+				{
+					ptrav = ptrav->pright;
+				}
+				else
+				{
+					ptrav = ptrav->pleft;
+				}
+			}
+			if (pnn->ct > pb->ct)
+			{
+				pb->pright = pnn;
+			}
+			else
+			{
+				pb->pleft = pnn;
+			}
+		}
+	}
+};
+class cnode {
+public:
+	char character = 0;
+	int ct = 0;
+	cnode* pnext;
+	ctnode* pdown;
+	cnode()
+	{
+		pnext = NULL;
+		pdown = NULL;
+	}
+};
+class cbinode {
+public:
+	char character = 0;
+	int ct = 0;
+	cbinode* pnext;
+	string bin;
+	cbinode()
+	{
+		pnext = NULL;
+
+	}
+};
+class cbislist {
+public:
+	cbinode* phead;
+
+
+	cbislist() {
+		phead = NULL;
+
+	}
+	~cbislist()
+	{
+		cbinode* ptrav = phead;
+		while (phead != NULL)
+		{
+			phead = ptrav->pnext;
+			ptrav->pnext = NULL;
+			delete[]ptrav;
+			ptrav = phead;
+		}
+	}
+
+	void insert(cbinode* pnn) {
+		if (phead == NULL) {
+			phead = pnn;
+
+		}
+		else
+		{
+			cbinode* pb = NULL;
+			cbinode* ptrav = phead;
+			while (ptrav->ct < pnn->ct && ptrav != NULL)
+			{
+				pb = ptrav;
+				ptrav = ptrav->pnext;
+				if (ptrav == NULL)
+				{
+					break;
+				}
+			}
+			if (pb != NULL)
+			{
+				pb->pnext = pnn;
+				pnn->pnext = ptrav;
+			}
+			else
+			{
+				pnn->pnext = phead;
+				phead = pnn;
+			}
+		}
+	}
+
+
+
+};
+class cslist {
+public:
+	cnode* phead;
+
+
+	cslist() {
+		phead = NULL;
+
+	}
+	~cslist()
+	{
+		cnode* ptrav = phead;
+		while (phead != NULL)
+		{
+			phead = ptrav->pnext;
+			ptrav->pnext = NULL;
+			delete[]ptrav;
+			ptrav = phead;
+		}
+	}
+
+	void insert(cnode* pnn) {
+		if (phead == NULL) {
+			phead = pnn;
+
+		}
+		else
+		{
+			cnode* pb = NULL;
+			cnode* ptrav = phead;
+			while (ptrav->ct < pnn->ct && ptrav != NULL)
+			{
+				pb = ptrav;
+				ptrav = ptrav->pnext;
+				if (ptrav == NULL)
+				{
+					break;
+				}
+			}
+			if (pb != NULL)
+			{
+				pb->pnext = pnn;
+				pnn->pnext = ptrav;
+			}
+			else
+			{
+				pnn->pnext = phead;
+				phead = pnn;
+			}
+		}
+	}
+
+
+
+};
+class rCnode {
+public:
+	char character;
+	rCnode* pnext;
+};
+
+class rClist {
+public:
+	rCnode* phead;
+	rCnode* ptail;
+
+	rClist() {
+		phead = NULL;
+		ptail = NULL;
+	}
+
+	void attach(rCnode* pnn) {
+		if (phead == NULL) {
+			phead = pnn;
+			ptail = pnn;
+		}
+		else {
+			ptail->pnext = pnn;
+			ptail = pnn;
+		}
+	}
+
+
+	~rClist() {
+		rCnode* ptrap;
+		ptrap = phead;
+		while (phead != NULL) {
+			phead = ptrap->pnext;
+			ptrap->pnext = NULL;
+			delete[] ptrap;
+			ptrap = phead;
+		}
+	}
+
+};
+
+void howmany(char& charc, int& ct, int h, ifstream& fl)
+{
+
+	char sch;
+	for (int i = 0; i < h; i++)
+	{
+
+		fl.read(&sch, 1);
+		if (sch == charc)
+		{
+			ct++;
+		}
+		//if (ch != '\0' && ch != '\n')
+		//{
+		//x += ch;
+		//}
+		//biimage.write(&ch, 1);
+
+
+	}
+}
+void disp(ctnode* pt, string bin, cbislist& lcode)
+{
+	if (pt == NULL)
+	{
+		return;
+	}
+	if (pt->id!= 1)
+	{
+		cout << "the character:" << pt->character << "," << bin << ",the ct:" << pt->ct << endl;
+		cbinode* pnn = new cbinode[1];
+		pnn->bin = bin;
+		pnn->pnext = NULL;
+		pnn->character = pt->character;
+		pnn->ct = pt->ct;
+		lcode.insert(pnn);
+	}
+	disp(pt->pleft, bin + '1', lcode);
+	disp(pt->pright, bin + '0', lcode);
+
+}
+void main()
+{
+	//cout << "enter string: " << endl;
+	string x;
+
+	//getline(cin, x);
+	ifstream   fl("C:/Users/youss/Downloads/huffmanfiles/astro.bmp", ifstream::binary);//main one for showcase read file ///change to whichever directory for testing but make sure the img is bmp
+	
+
+
+
+
+	//ifstream   fl("C:/Users/youss/Downloads/huffmanfiles/21_Examinations.doc", ifstream::binary);//for testing
+	 
+
+	fl.seekg(0, fl.end);
+	int h = fl.tellg();
+	fl.seekg(0, fl.beg);
+
+	char ch;
+
+
+
+	cslist csl;
+	cnode* pnn = NULL;
+	char somech = -1;
+	//the below loop iterates over all possiple asci characters and counts how many of them there are and then fills a sorted linked list
+	for (int lop = -1; lop < 255; lop++)
+	{
+		pnn = new cnode[1];
+		pnn->pnext = NULL;
+		pnn->pdown = NULL;
+
+
+		if (lop == -1)//for the first character so that it doesnt increment it
+		{
+			pnn->character = -1;
+		}
+		else
+		{
+			somech++;
+			
+			pnn->character = somech;
+		}
+		char pch = pnn->character;
+		int pcn = pnn->ct;
+
+
+		//howmany(pch, pcn,h,fl);
+		ifstream   fl("C:/Users/youss/Downloads/huffmanfiles/astro.bmp", ifstream::binary);//main one for showcase read file ///change to whichever directory for testing but make sure the img is bmp
+		//ifstream   fl("C:/Users/youss/Downloads/huffmanfiles/huffsquishy.avi", ifstream::binary);//for testing
+		fl.seekg(0, fl.end);
+		int h = fl.tellg();
+		fl.seekg(0, fl.beg);
+
+
+		for (int i = 0; i < h; i++)
+		{
+
+			fl.read(&ch, 1);
+			if (ch == pch)
+			{
+				pcn++;
+			}
+			if (lop == 0)//so we wrie in x only oonce
+			{
+				x += ch;
+				//biimage.write(&ch, 1);
+			}
+
+		}
+		fl.seekg(0, fl.beg);
+		pnn->ct = pcn;
+
+
+
+		if (pnn->ct == 0)
+		{
+			delete[]pnn;
+		}
+		else
+		{
+			if (pnn->ct > 0)
+			{
+				csl.insert(pnn);
+			}
+		}
+	}
+
+	//creating the trees below
+	cnode* ptravm = csl.phead;
+	cnode* pa = NULL;
+	ctnode* pnnt = NULL;
+	ctnode* apnnt = NULL;
+	cnode* mpnn = NULL;
+	int flagcase = 0;//so that when one of the cases happens it doesnt enter the next if imedietly
+	while (ptravm != NULL)
+	{
+		flagcase = 0;
+		ptravm = csl.phead;
+		pa = ptravm->pnext;
+		//case 6 where only one node is left
+		if (flagcase == 0 && pa == NULL)
+		{
+			csl.phead = ptravm;
+			break;
+		}
+		//case 1 below
+		if (flagcase == 0 && ptravm->pdown == NULL && pa->pdown == NULL)
+		{
+
+			pnnt = new ctnode[1];//the root node that holds the two tree nodes and is held by the sorted linked list node which is a newly created one btw
+			pnnt->ct = ptravm->ct + pa->ct;
+			pnnt->character = NULL;
+			pnnt->id = 1;
+
+			apnnt = new ctnode[1];
+			apnnt->ct = ptravm->ct;
+			apnnt->character = ptravm->character;
+			pnnt->pleft = apnnt;
+			apnnt = new ctnode[1];
+			apnnt->ct = pa->ct;
+			apnnt->character = pa->character;
+			pnnt->pright = apnnt;
+
+
+			mpnn = new cnode[1];//this node holds the actual tree below it
+
+			mpnn->ct = pnnt->ct;
+			mpnn->character = NULL;
+			mpnn->pdown = pnnt;
+			mpnn->pnext = NULL;
+			csl.insert(mpnn);
+			if (pa->pnext != NULL)
+			{
+				csl.phead = pa->pnext;//so that we have a new phead
+			}
+			else
+			{
+				csl.phead = mpnn;
+			}
+
+
+
+
+
+			ptravm->pnext = NULL;
+			ptravm->pdown = NULL;
+
+			pa->pnext = NULL;
+			pa->pdown = NULL;
+			delete[]ptravm;
+			delete[]pa;
+			flagcase = 1;
+
+		}
+
+
+		//case 2 bellow:only  pa has a pdown
+		if (flagcase == 0 && pa->pdown != NULL && ptravm->pdown == NULL)
+		{
+			pnnt = new ctnode[1];//the root node that holds the two tree nodes and is held by the sorted linked list node which is a newly created one btw
+			pnnt->ct = ptravm->ct + pa->ct;
+			pnnt->character = NULL;
+			pnnt->id = 1;
+
+
+			apnnt = new ctnode[1];
+			apnnt->ct = ptravm->ct;
+			apnnt->character = ptravm->character;
+			pnnt->pleft = apnnt;
+			pnnt->pright = pa->pdown;
+
+
+			mpnn = new cnode[1];//this node holds the actual tree below it and is part of the sorted linked list
+			mpnn->pnext = pa->pnext;
+			mpnn->ct = pnnt->ct;
+			mpnn->character = NULL;
+			mpnn->pdown = pnnt;
+			csl.insert(mpnn);
+			if (pa->pnext != NULL)
+			{
+				csl.phead = pa->pnext;//so that we have a new phead
+			}
+			else
+			{
+				csl.phead = mpnn;
+			}
+
+
+
+
+			pa->pnext = NULL;
+			pa->pdown = NULL;
+			ptravm->pdown = NULL;
+			ptravm->pnext = NULL;
+			delete[]pa;
+			flagcase = 1;
+		}
+		//case 3 below:only ptravm has a pdown
+		if (flagcase == 0 && ptravm->pdown != NULL && pa->pdown == NULL)
+		{
+			pnnt = new ctnode[1];//the root node that holds the two tree nodes and is held by the sorted linked list node which is a newly created one btw
+			pnnt->ct = ptravm->ct + pa->ct;
+			pnnt->character = NULL;
+			pnnt->id = 1;
+
+			apnnt = new ctnode[1];
+			apnnt->ct = pa->ct;
+			apnnt->character = pa->character;
+			pnnt->pright = apnnt;
+			pnnt->pleft = ptravm->pdown;
+
+			mpnn = new cnode[1];//this node holds the actual tree below it
+			mpnn->pnext = pa->pnext;
+			mpnn->ct = pnnt->ct;
+			mpnn->character = NULL;
+			mpnn->pdown = pnnt;
+			csl.insert(mpnn);
+			if (pa->pnext != NULL)
+			{
+				csl.phead = pa->pnext;//so that we have a new phead
+			}
+			else
+			{
+				csl.phead = mpnn;
+			}
+
+
+
+
+			pa->pnext = NULL;
+			pa->pdown = NULL;
+			ptravm->pdown = NULL;
+			ptravm->pnext = NULL;
+
+			delete[]ptravm;
+			delete[]pa;
+			flagcase = 1;
+		}
+
+		//case 4 below:incase both ptrav and pa have a pdown
+		if (flagcase == 0 && ptravm->pdown != NULL && pa->pdown != NULL)
+		{
+			pnnt = new ctnode[1];//the root node that holds the two tree nodes and is held by the sorted linked list node which is a newly created one btw
+			pnnt->ct = ptravm->ct + pa->ct;
+			pnnt->character = NULL;
+			pnnt->id = 1;
+			pnnt->pleft = ptravm->pdown;
+			pnnt->pright = pa->pdown;
+			mpnn = new cnode[1];//this node holds the actual tree below it
+			mpnn->pnext = pa->pnext;
+			mpnn->ct = pnnt->ct;
+			mpnn->character = NULL;
+			mpnn->pdown = pnnt;
+			csl.insert(mpnn);
+			if (pa->pnext != NULL)
+			{
+				csl.phead = pa->pnext;//so that we have a new phead
+			}
+			else
+			{
+				csl.phead = mpnn;
+			}
+
+
+
+
+
+
+			pa->pnext = NULL;
+			pa->pdown = NULL;
+			ptravm->pdown = NULL;
+			ptravm->pnext = NULL;
+
+			delete[]ptravm;
+			delete[]pa;
+			flagcase = 1;
+		}
+
+		//case 5 both have pdown and pa has no pnext
+		if (flagcase == 0 && ptravm->pdown != NULL && pa->pdown != NULL)
+		{
+			pnnt = new ctnode[1];//the root node that holds the two tree nodes and is held by the sorted linked list node which is a newly created one btw
+			pnnt->ct = ptravm->ct + pa->ct;
+			pnnt->character = NULL;
+			pnnt->id = 1;
+			pnnt->pleft = ptravm->pdown;
+			pnnt->pright = pa->pdown;
+			mpnn = new cnode[1];//this node holds the actual tree below it
+
+			mpnn->ct = pnnt->ct;
+			mpnn->character = NULL;
+			mpnn->pdown = pnnt;
+			csl.insert(mpnn);
+			if (pa->pnext != NULL)
+			{
+				csl.phead = pa->pnext;//so that we have a new phead
+			}
+			else
+			{
+				csl.phead = mpnn;
+			}
+
+
+			pa->pnext = NULL;
+			pa->pdown = NULL;
+			ptravm->pdown = NULL;
+			ptravm->pnext = NULL;
+			delete[]ptravm;
+			delete[]pa;
+			flagcase = 1;
+
+		}
+		ptravm = csl.phead;
+		pa = ptravm->pnext;
+
+	}
+	string bin;
+	cbislist lcode;
+
+	disp(ptravm->pdown, bin, lcode);
+	cbinode* ptrav = lcode.phead;
+	cout << endl;
+	cout << "this is the list that takes from the tree, below: " << endl;
+	while (ptrav != NULL)
+	{
+		cout << "the character: " << " " << ptrav->character << " " << "the ct: " << " " << ptrav->ct << " " << "the binary: " << " " << ptrav->bin << endl;
+		ptrav = ptrav->pnext;
+	}
+
+
+
+
+
+
+
+	//////compression below
+
+
+	int ibit = 7, icode = 0, k = 0;
+	char  temp = 0, mask = 1;//mask is used for the setting while temp is just the 8 0s
+
+
+	//char compressed[100000];
+	ofstream   fl2("C:/Users/youss/Downloads/huffmanfiles/compressed.bmp", ofstream::binary);//compressed file ///change to whichever directory it will save the comressed non readable version
+	string compressed;
+	int ctcom = 0;
+	int maxicode = 0;
+	string weirdcharacters;//this is for the characters that dont get saved
+	int weirdcharacterct = 15;
+
+	fl.seekg(0, fl.end);
+	h = fl.tellg();
+	fl.seekg(0, fl.beg);
+
+
+	for (int i = 0; i < h; i++)
+	{
+
+		fl.read(&ch, 1);
+		ptrav = lcode.phead;//lcode carries the binary
+		while (ptrav != NULL)
+		{
+			if (ptrav->character == ch)
+			{
+				break;
+			}
+			ptrav = ptrav->pnext;
+		}
+
+		if (ptrav != NULL)
+		{
+			maxicode = ptrav->bin.length();
+
+			for (icode = 0; icode < maxicode; icode++)//note icode is for the letter itself ibit is for the tmp
+			{
+				if (ptrav->bin[icode] == '1')
+				{
+					temp = temp | (mask << ibit);
+				}
+				ibit--;
+				if (ibit < 0)//time to put it in the array
+				{
+
+					fl2.write(&temp, 1);
+					compressed += temp;
+
+					ibit = 7;
+					temp = 0;
+
+				}
+			}
+		}
+		else//incase we meet a character that didnt get encrypted or is basically not part of the tree
+		{//note the weird characters are probably just nulls
+
+			_getch();
+			cout << "the weird char is:" << endl;
+			//cout<< ch;
+			if (ch == '\0')
+			{
+				cout << "it is null" << endl;
+
+				ptrav = lcode.phead;
+				while (ptrav->character != '\0')
+				{
+					ptrav = ptrav->pnext;
+				}
+				maxicode = ptrav->bin.length();
+
+				for (icode = 0; icode < maxicode; icode++)//note icode is for the letter itself ibit is for the tmp
+				{
+					if (ptrav->bin[icode] == '1')
+					{
+						temp = temp | (mask << ibit);
+					}
+					ibit--;
+					if (ibit < 0)//time to put it in the array
+					{
+
+						fl2.write(&temp, 1);
+						compressed += temp;
+
+						ibit = 7;
+						temp = 0;
+
+					}
+				}
+			}
+
+		}
+	}
+	
+	if (ibit > 0 && ibit < 7)//incase we leave the for loop and we havent uploaded temp yet into the compressed array
+	{
+
+		fl2.write(&temp, 1);
+		compressed += temp;
+		//ctcom++;
+		ibit = 7;
+		temp = 0;
+	}
+	//cout << "size of file:" << h;
+
+	//display of compressed
+	cout << endl;
+	//cout << "encrypted data: " << endl;
+	cout << "wait till you get a compression done message before closing the screen" << endl;
+
+	fl2.close();
+	cout << endl;
+	cout << endl;
+
+	ofstream   fl3("C:/Users/youss/Downloads/huffmanfiles/decompress.bmp", ofstream::binary);//decompressed file ///change to whichever directory this is the decompressed version to prove that it didnt get corrupted 
+
+
+	cbinode* anptrav = lcode.phead;
+	string currentcode;
+	int ccct = 0;
+	char  res = ' ';
+	//char decompress[100000];
+	string decompress;
+	int ctdecom = 0;
+
+	for (int i = 0; i < compressed.length(); i++)
+	{
+
+		for (ibit = 7; ibit >= 0; ibit--)
+		{
+			res = compressed[i] & (mask << ibit);
+			if (res != 0)
+			{
+				currentcode += '1';
+				ccct++;
+			}
+			else
+			{
+				currentcode += '0';
+				ccct++;
+			}
+			anptrav = lcode.phead;
+			while (anptrav != NULL)//for searching for a match with the specific binary
+			{
+
+				if (anptrav->bin == currentcode && anptrav->bin.length() == ccct)//if we find a matching letter add it to the decompress and return everything to zero
+				{
+					fl3.write(&anptrav->character, 1);
+					decompress += anptrav->character;
+					ctdecom++;
+					currentcode.clear();
+					ccct = 0;
+					break;//there used to be a break here remove it if u get extra characters
+
+				}
+				anptrav = anptrav->pnext;
+			}
+		}
+
+	}
+
+	fl3.close();
+	//display of decompressed
+	fl.seekg(0, fl.end);
+	h = fl.tellg();
+	fl.seekg(0, fl.beg);
+
+	//loop for finding if there is a diffrence between the compressed and decompressed
+	for (int i = 0; i < h; i++)
+	{
+
+		fl.read(&ch, 1);
+	
+	
+		if (decompress[i] != ch)
+		{
+			cout << "diffrence in:" << i << endl;
+		}
+	}
+	cout << endl;
+
+	cout << endl;
+	cout << "compression done" << endl;
+	cout << "size of x:" << x.length();
+	cout << "actual size of file:" << h;
+	system("pause");
+
+}
